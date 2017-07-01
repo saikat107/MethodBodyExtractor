@@ -1,0 +1,2 @@
+<METHOD_START> public void ( ) { this . int = NUMBER ; }  <METHOD_END>
+<METHOD_START> public void void ( java.lang.String [] java.lang.String[] ) { java.lang.String java.lang.String ; double double = NUMBER ; HelloWorld HelloWorld = new HelloWorld ( ) ; double double = NUMBER ; if( HelloWorld . int < NUMBER ) { for( int int = NUMBER ; int < NUMBER ; int ++ ) { double = double + NUMBER ; java.lang.String = STRING ; java.lang.String = java.lang.String + double ; } } }  <METHOD_END>
