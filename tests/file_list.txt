@@ -1,2 +1,1 @@
-tests/input.java
-tests/MainActivity.java
+tests/GPUImageLaplacianFilter.java

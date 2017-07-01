@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
@@ -41,14 +42,13 @@ public class JavaMethodExtractor extends ASTVisitor{
 		String methodSignature = text.substring(0, text.indexOf(methodBody));
 		ArrayList<String> apis = new ArrayList<>();
 		ASTVisitor methodInvocationASTVisitor = new ASTVisitor() {
-			public boolean visit(MethodInvocation node){
-				apis.add(node.toString());
+			public boolean visit(MethodInvocation minode){
+				apis.add(minode.toString());
 				return true;
 			}
 		}; 
 		
-		CompilationUnit unitNode = (CompilationUnit)(node.getRoot());
-		unitNode.accept(methodInvocationASTVisitor);
+		node.accept(methodInvocationASTVisitor);
 		methodBodies.put(methodSignature, methodBody);
 		apiCalls.put(methodSignature, apis);
 		return true;
