@@ -5,7 +5,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
+
+import util.Util;
+
+
 
 public class Main {
 	public static void main(String args[]) throws IOException {
@@ -21,15 +26,20 @@ public class Main {
 				try {
 					HashMap<String, String> methodBodies = methodExtractor.getMethodBodies(); // methodSignature => methodBody
 					HashMap<String, ArrayList<String>> apiCalls = methodExtractor.getAPICalls(); //methodSignature => ArrayList of API Calls
-					System.out.println(infile);
+					Util.log(infile);
 					Set<String> methodSigs = methodBodies.keySet();
 					for (String methodSig: methodSigs){
-						System.out.println("\n\n" + methodSig);
-						System.out.println(methodBodies.get(methodSig));
+						Util.log("\n\n" + methodSig);
+						Util.log(methodBodies.get(methodSig));
 						ArrayList<String> apis = apiCalls.get(methodSig);
 						for(String api  : apis){
-							System.out.println(api);
+							Util.log(api);
 						}
+					}
+					
+					List<String> importDeclarations = methodExtractor.getImportDeclarations();
+					for(String importDeclaration : importDeclarations){
+						Util.log(importDeclaration);
 					}
 				} catch (Exception e) {
 					e.printStackTrace();

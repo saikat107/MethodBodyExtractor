@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -13,6 +14,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 
@@ -22,7 +24,8 @@ public class JavaMethodExtractor extends ASTVisitor{
 	private String documentText;
 	private HashMap<String, String> methodBodies = new HashMap<>();
 	private HashMap<String, ArrayList<String>> apiCalls = new HashMap<>();
-	private boolean methodExtracted = false;
+	private List<String> importDeclarations = new ArrayList<String>();
+	private boolean extracted = false;
 	
 	public JavaMethodExtractor(String inputJavaFilePath) throws FileNotFoundException{
 		this.filePath = inputJavaFilePath;
@@ -35,6 +38,10 @@ public class JavaMethodExtractor extends ASTVisitor{
 		scanner.close();
 	}
 	
+	public boolean visit(ImportDeclaration node){
+		importDeclarations.add(node.toString());
+		return true;
+	}
 	
 	public boolean visit(MethodDeclaration node){
 		String  methodBody = node.getBody().toString();
@@ -71,11 +78,13 @@ public class JavaMethodExtractor extends ASTVisitor{
 		
 		CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 		cu.accept(this);	
-		methodExtracted = true;
+		extracted = true;
 	}
 	
+	
+	
 	public HashMap<String, String> getMethodBodies() throws Exception{
-		if(methodExtracted){
+		if(extracted){
 			return methodBodies;
 		}
 		else {
@@ -85,12 +94,21 @@ public class JavaMethodExtractor extends ASTVisitor{
 	}
 	
 	public HashMap<String, ArrayList<String>> getAPICalls() throws Exception{
-		if(methodExtracted){
+		if(extracted){
 			return apiCalls;
 		}
 		else {
 			throw new Exception("Methods have not been extracted yet. Please call "
 					+ "JavaMethodExtractor.extract() prior calling this method");
+		}
+	}
+	
+	public List<String> getImportDeclarations() throws Exception{
+		if(extracted){
+			return importDeclarations;
+		}
+		else{
+			throw new Exception("File not parsed yet. Call JavaMethodExtractor.extract() prior calling this method");
 		}
 	}
 }
